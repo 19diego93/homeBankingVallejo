@@ -39,13 +39,16 @@ public class Client {
         this.lastName = lastName;
     }
 
-    public String getIdCard() {
+    public String getEmail() {
         return email;
     }
 
-    public void setIdCard(String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
+
+    public Long getId(){return id;}
+
     public String toString() {
         return firstName + " " + lastName;
     }
