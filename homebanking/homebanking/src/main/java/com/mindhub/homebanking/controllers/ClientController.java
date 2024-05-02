@@ -24,9 +24,10 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Client> getClientById(@PathVariable Long id){
+    public ResponseEntity<?> getClientById(@PathVariable Long id){
     Client client = clientRepository.findById(id).orElse(null);
-    return new ResponseEntity<>(client,HttpStatus.OK);
+    if(client != null){return new ResponseEntity<>(client,HttpStatus.OK);}
+    return new ResponseEntity<>("Id: "+id+" doesn't exist!", HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/hello")
