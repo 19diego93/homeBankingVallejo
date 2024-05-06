@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,19 +24,19 @@ public class ClientController {
         List <Client> clientList = clientRepository.findAll();
         List<ClientDto> clientDtoList= clientList.stream().map(client -> new ClientDto(client)).collect(Collectors.toList());
         if (!clientList.isEmpty()){
-            return new ResponseEntity<>(clientDtoList,HttpStatus.OK);
-        }else { return new ResponseEntity<>("There are no Clients",HttpStatus.NOT_FOUND);}
+            return new ResponseEntity<>(clientDtoList,HttpStatus.OK);}
+        else{
+            return new ResponseEntity<>("There are no Clients",HttpStatus.NOT_FOUND);}
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getClientById(@PathVariable Long id){
         Client client = clientRepository.findById(id).orElse(null);
         if(client != null){
-        ClientDto clientDto = new ClientDto(client);
-        return new ResponseEntity<>(clientDto,HttpStatus.OK);}
+            ClientDto clientDto = new ClientDto(client);
+            return new ResponseEntity<>(clientDto,HttpStatus.OK);}
         else{
-        return new ResponseEntity<>("Id: " + id + " doesn't exist!", HttpStatus.NOT_FOUND);}
-
+            return new ResponseEntity<>("Id: " + id + " doesn't exist!", HttpStatus.NOT_FOUND);}
     }
 
     @GetMapping("/hello")
