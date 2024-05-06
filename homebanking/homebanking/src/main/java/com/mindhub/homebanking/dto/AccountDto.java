@@ -7,10 +7,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class AccountDto {
+
     private Long id;
+
     private String number;
+
     private LocalDate creationDate;
+
     private double balance;
+
     private Set<TransactionDto> transactionsDto = new HashSet<>();
 
     public AccountDto(Account account) {
@@ -25,8 +30,12 @@ public class AccountDto {
     }
 
     public Long getId() {return id;}
+
     public String getNumber() {return number;}
+
     public LocalDate getCreationDate() {return creationDate;}
+
     public double getBalance() {return balance;}
+
     public Set<TransactionDto> getTransactions() {return transactionsDto;}
 }

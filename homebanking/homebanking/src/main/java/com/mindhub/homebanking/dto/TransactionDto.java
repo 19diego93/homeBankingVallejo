@@ -5,10 +5,15 @@ import com.mindhub.homebanking.models.TransactionType;
 import java.time.LocalDateTime;
 
 public class TransactionDto {
+
     private long id;
+
     private TransactionType type;
+
     private double amount;
+
     private String description;
+
     private LocalDateTime date;
 
     public TransactionDto(Transaction transaction) {
@@ -20,8 +25,12 @@ public class TransactionDto {
     }
 
     public long getId() {return id;}
+
     public TransactionType getType() {return type;}
+
     public double getAmount() {return amount;}
+
     public String getDescription() {return description;}
+
     public LocalDateTime getDate() {return date;}
 }
