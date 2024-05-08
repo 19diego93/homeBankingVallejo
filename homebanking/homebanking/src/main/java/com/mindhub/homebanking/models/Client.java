@@ -2,7 +2,9 @@ package com.mindhub.homebanking.models;
 
 import jakarta.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import static java.util.stream.Collectors.toList;
 
 @Entity
 public class Client {
@@ -20,6 +22,9 @@ public class Client {
     @OneToMany(mappedBy = "accountOwner", fetch = FetchType.EAGER)
     private Set<Account> accounts = new HashSet<>();
 
+    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
+    private Set<ClientLoan> clientLoans = new HashSet<>();
+
     public Client() {}
 
     public Client(String firstName, String lastName, String email) {
@@ -27,6 +32,8 @@ public class Client {
         this.lastName = lastName;
         this.email = email;
     }
+
+    public Set<ClientLoan> getClientLoans() {return clientLoans;}
 
     public Set<Account> getAccounts() {return accounts;}
 
@@ -44,10 +51,24 @@ public class Client {
 
     public Long getId(){return id;}
 
-    public String toString() {return firstName + " " + lastName;}
-
     public void addAccount(Account account){
         account.setOwner(this);
         accounts.add(account);
+    }
+    public void addLoan(ClientLoan clientLoan){
+        clientLoan.setClient(this);
+        clientLoans.add(clientLoan);
+    }
+    public List<Loan> getLoans() {
+        return this.getClientLoans().stream().map(loan -> loan.getLoan()).collect(toList());}
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                ", email='" + email + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", id=" + id +
+                '}';
     }
 }
