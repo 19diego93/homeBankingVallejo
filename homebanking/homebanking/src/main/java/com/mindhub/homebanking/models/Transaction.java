@@ -19,7 +19,7 @@ public class Transaction {
     private LocalDateTime date;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private Account accountId;
+    private Account account;
 
     public Transaction() {}
 
@@ -48,7 +48,18 @@ public class Transaction {
 
     public void setDate(LocalDateTime date) {this.date = date;}
 
-    public Account getAccount() {return accountId;}
+    public Account getAccount() {return account;}
 
-    public void setAccount(Account account) {this.accountId = account;}
+    public void setAccount(Account account) {this.account = account;}
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", type=" + type +
+                ", amount=" + amount +
+                ", description='" + description + '\'' +
+                ", date=" + date +
+                '}';
+    }
 }

@@ -1,4 +1,4 @@
-package com.mindhub.homebanking.dto;
+package com.mindhub.homebanking.dtos;
 
 import com.mindhub.homebanking.models.Client;
 import java.util.HashSet;

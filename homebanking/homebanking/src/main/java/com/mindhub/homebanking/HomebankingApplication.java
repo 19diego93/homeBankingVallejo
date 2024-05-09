@@ -58,16 +58,18 @@ public class HomebankingApplication {
 			transaction5.setAccount(account3);
 			transaction6.setAccount(account3);
 
-			clientLoan1.setLoan(loan1);
-			clientLoan1.setClient(client1);
-			client1.addLoan(clientLoan1);
-			loan1.addClient(clientLoan1);
-			
+			System.out.println(transaction1);
+
 			clientLoan2.setLoan(loan2);
 			clientLoan2.setClient(client1);
 			client1.addLoan(clientLoan2);
 			loan2.addClient(clientLoan2);
-			
+
+			clientLoan1.setLoan(loan1);
+			clientLoan1.setClient(client1);
+			client1.addLoan(clientLoan1);
+			loan1.addClient(clientLoan1);
+
 			clientLoan3.setLoan(loan2);
 			clientLoan3.setClient(client2);
 			client2.addLoan(clientLoan3);
@@ -103,7 +105,7 @@ public class HomebankingApplication {
 
 
 			System.out.println(client1.getLoans());
-			System.out.println(loan1.getClients());
+			System.out.println(loan2.getClients());
 		};
 	}
 }
