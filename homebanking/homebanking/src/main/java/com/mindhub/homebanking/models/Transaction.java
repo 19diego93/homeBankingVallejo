@@ -10,7 +10,7 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private TransactionType type;
+    private Type type;
 
     private double amount;
 
@@ -23,7 +23,7 @@ public class Transaction {
 
     public Transaction() {}
 
-    public Transaction(TransactionType type, double amount, String description, LocalDateTime date) {
+    public Transaction(Type type, double amount, String description, LocalDateTime date) {
         this.type = type;
         this.amount = amount;
         this.description = description;
@@ -32,9 +32,9 @@ public class Transaction {
 
     public long getId() {return id;}
 
-    public TransactionType getType() {return type;}
+    public Type getType() {return type;}
 
-    public void setType(TransactionType type) {this.type = type;}
+    public void setType(Type type) {this.type = type;}
 
     public double getAmount() {return amount;}
 

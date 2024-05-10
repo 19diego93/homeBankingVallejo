@@ -25,6 +25,9 @@ public class Client {
     @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
     private Set<ClientLoan> clientLoans = new HashSet<>();
 
+    @OneToMany(mappedBy = "client")
+    private Set<Card> cards = new HashSet<>();
+
     public Client() {}
 
     public Client(String firstName, String lastName, String email) {
@@ -32,6 +35,8 @@ public class Client {
         this.lastName = lastName;
         this.email = email;
     }
+
+    public Set<Card> getCards() {return cards;}
 
     public Set<ClientLoan> getClientLoans() {return clientLoans;}
 
@@ -61,6 +66,12 @@ public class Client {
     }
     public List<Loan> getLoans() {
         return this.getClientLoans().stream().map(loan -> loan.getLoan()).collect(toList());}
+
+    public void addCard(Card card){
+        card.setClient(this);
+        cards.add(card);
+        card.setCardHolder(this.firstName+" "+this.lastName);
+    }
 
     @Override
     public String toString() {

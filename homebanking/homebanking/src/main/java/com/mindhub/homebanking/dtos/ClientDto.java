@@ -15,17 +15,17 @@ public class ClientDto {
 
     private Set <AccountDto> accounts;
 
-    private Set<ClientLoanDto> loans = new HashSet<>();
+    private Set<ClientLoanDto> loans;
+
+    private Set<CardDto> cards;
 
     public ClientDto(Client client) {
         this.id = client.getId();
         this.name = client.getFirstName();
         this.email = client.getEmail();
-        this.accounts = client.getAccounts()
-                .stream()
-                .map(account -> new AccountDto(account))
-                .collect(Collectors.toSet());
+        this.accounts = client.getAccounts().stream().map(account -> new AccountDto(account)).collect(Collectors.toSet());
         this.loans = client.getClientLoans().stream().map(clientLoanDto -> new ClientLoanDto(clientLoanDto)).collect(Collectors.toSet());
+        this.cards = client.getCards().stream().map(card -> new CardDto(card)).collect(Collectors.toSet());
     }
 
     public Long getId() {return id;}
@@ -37,5 +37,7 @@ public class ClientDto {
     public Set<AccountDto> getAccounts() {return accounts;}
 
     public Set<ClientLoanDto> getLoans() {return loans;}
+
+    public Set<CardDto> getCards() {return cards;}
 
 }
