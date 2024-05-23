@@ -17,6 +17,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -58,7 +60,7 @@ public class AuthController {
             return  new ResponseEntity<>("The name field must not be empty", HttpStatus.FORBIDDEN);
         }
         if(registerDTO.lastName().isBlank()){
-            return  new ResponseEntity<>("The surename field must not be empty", HttpStatus.FORBIDDEN);
+            return  new ResponseEntity<>("The surname field must not be empty", HttpStatus.FORBIDDEN);
         }
         if(registerDTO.email().isBlank()){
             return  new ResponseEntity<>("The email field must not be empty", HttpStatus.FORBIDDEN);
@@ -66,11 +68,19 @@ public class AuthController {
         if(registerDTO.password().isBlank()){
             return  new ResponseEntity<>("The password field must not be empty", HttpStatus.FORBIDDEN);
         }
-        
+        if(clientRepository.existsByEmail(registerDTO.email())){
+            return  new ResponseEntity<>("The email is already in use", HttpStatus.BAD_REQUEST);
+        }
 
         Client client = new Client(registerDTO.firstName(),registerDTO.lastName(), registerDTO.email(),passwordEncoder.encode(registerDTO.password()));
         clientRepository.save(client);
         return  new ResponseEntity<>("Client created", HttpStatus.CREATED);
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<?>test(Authentication authentication){
+        String mail = authentication.getName();
+        return ResponseEntity.ok("Hello "+mail);
     }
 
     @GetMapping("/current")
