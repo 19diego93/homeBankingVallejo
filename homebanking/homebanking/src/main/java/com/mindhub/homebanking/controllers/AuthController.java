@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -56,6 +57,13 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity <?> register (@RequestBody RegisterDTO registerDTO){
 
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
+        // se crea un objeto pattern ( compila la expresión regular proporcionada)
+        Pattern pattern = Pattern.compile(emailRegex);
+
+        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+        Pattern passwordPattern = Pattern.compile(passwordRegex);
+
         if(registerDTO.firstName().isBlank()){
             return  new ResponseEntity<>("The name field must not be empty", HttpStatus.FORBIDDEN);
         }
@@ -68,8 +76,17 @@ public class AuthController {
         if(registerDTO.password().isBlank()){
             return  new ResponseEntity<>("The password field must not be empty", HttpStatus.FORBIDDEN);
         }
+        if(!passwordPattern.matcher(registerDTO.email()).matches()){
+            return  new ResponseEntity<>("The password field must have 8 characters one uppercase one lowercase", HttpStatus.FORBIDDEN);
+        }
         if(clientRepository.existsByEmail(registerDTO.email())){
             return  new ResponseEntity<>("The email is already in use", HttpStatus.BAD_REQUEST);
+        }
+        /*if(clientRepository.findByEmail(registerDTO.email()) != null){
+            return  new ResponseEntity<>("The email is already in use", HttpStatus.BAD_REQUEST);
+        }**/
+        if (!pattern.matcher(registerDTO.email()).matches()) {
+            return new ResponseEntity<>("The email format is incorrect", HttpStatus.FORBIDDEN);
         }
 
         Client client = new Client(registerDTO.firstName(),registerDTO.lastName(), registerDTO.email(),passwordEncoder.encode(registerDTO.password()));

@@ -38,7 +38,8 @@ public class WebConfig {
                 .authorizeHttpRequests(authorize ->
                         authorize
                                 .requestMatchers("/api/auth/login","/api/auth/register","/h2-console/**").permitAll()
-                                .requestMatchers("/api/auth/current").hasRole("CLIENT")
+                                .requestMatchers("/api/auth/current","/api/auth/current/accounts").hasRole("CLIENT")
+                                .requestMatchers("/api/clients","/api/clients/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
