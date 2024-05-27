@@ -29,13 +29,13 @@ public class Card {
 
     public Card() {}
 
-    public Card(Type cardType, CardColor color, String number, int cvv, LocalDate creationDate, LocalDate expirationDate) {
+    public Card(Type cardType, CardColor color, String number, int cvv) {
         this.cardType = cardType;
         this.color = color;
         this.number = number;
         this.cvv = cvv;
-        this.creationDate = creationDate;
-        this.expirationDate = expirationDate;
+        this.creationDate = LocalDate.now();
+        this.expirationDate = LocalDate.now().plusYears(5);
     }
 
     public long getId() {return id;}

@@ -26,9 +26,9 @@ public class Account {
 
     public Account() {}
 
-    public Account(String number, LocalDate creationDate, double balance) {
+    public Account(String number, double balance) {
         this.number = number;
-        this.creationDate = creationDate;
+        this.creationDate =  LocalDate.now();
         this.balance = balance;
     }
 

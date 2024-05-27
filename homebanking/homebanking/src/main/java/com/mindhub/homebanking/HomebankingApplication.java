@@ -28,9 +28,9 @@ public class HomebankingApplication {
 			Client client1= new Client("Melba","Morel","melba@mindhub.com", passwordEncoder.encode("1234"));
 			Client client2= new Client("Diego","Vallejo","dv93@mindhub.com",passwordEncoder.encode("4321"));
 
-			Account account1 = new Account("VNI001", LocalDate.now(),5000);
-			Account account2 = new Account("VNI002", LocalDate.of(2024, 5, 4),7500);
-			Account account3 = new Account("VNI003", LocalDate.of(2024, 5, 1),9);
+			Account account1 = new Account("VNI001",5000);
+			Account account2 = new Account("VNI002",7500);
+			Account account3 = new Account("VNI003",9);
 
 			Transaction transaction1 = new Transaction(Type.CREDIT,800,"Annual payment", LocalDateTime.now());
 			Transaction transaction2 = new Transaction(Type.DEBIT,-300,"Daily payment", LocalDateTime.now());
@@ -48,9 +48,9 @@ public class HomebankingApplication {
 			ClientLoan clientLoan3 =new ClientLoan(100000,24);
 			ClientLoan clientLoan4 =new ClientLoan(200000,36);
 
-			Card card1 = new Card(Type.DEBIT,CardColor.GOLD,"3325-6745-7876-4445",345,LocalDate.now(),LocalDate.now().plusYears(5));
-			Card card2 = new Card(Type.CREDIT,CardColor.TITANIUM,"2345-6745-8876-4567",123,LocalDate.now(),LocalDate.now().plusYears(5));
-			Card card3 = new Card(Type.CREDIT,CardColor.SILVER,"1111-2345-4566-9898",999,LocalDate.now(),LocalDate.now().plusYears(5));
+			Card card1 = new Card(Type.DEBIT,CardColor.GOLD,"3325-6745-7876-4445",345);
+			Card card2 = new Card(Type.CREDIT,CardColor.TITANIUM,"2345-6745-8876-4567",123);
+			Card card3 = new Card(Type.CREDIT,CardColor.SILVER,"1111-2345-4566-9898",999);
 
 			account1.setOwner(client1);
 			account2.setOwner(client1);

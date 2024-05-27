@@ -4,5 +4,4 @@ public enum CardColor {
     GOLD,
     SILVER,
     TITANIUM,
-    BLACK
-}
+    }

@@ -39,6 +39,6 @@ public class ClientController {
 
     @GetMapping("/hello")
     public String sayHello(){
-        return "Hello Clients!";
+        return "Hello Client!";
     }
 }
