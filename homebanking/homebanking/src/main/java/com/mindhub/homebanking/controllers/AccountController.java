@@ -44,7 +44,7 @@ public class AccountController {
             return new ResponseEntity<>("Account id: " + id + " doesn't exist!", HttpStatus.NOT_FOUND);}
     }
     @PostMapping("clients/accounts/current")
-    public ResponseEntity<?> getClient(Authentication authentication){
+    public ResponseEntity<?> createAccount(Authentication authentication){
 
         Client client = clientRepository.findByEmail(authentication.getName());
         //seguir aca , verificar que que no tenga mas de 3 accounts, no se repita el num de account en repositorio de account, crear el num aleatorio y vincular la cuenta con el client.

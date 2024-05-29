@@ -33,15 +33,18 @@ public class CardController {
     public ResponseEntity<?> getClient(@RequestBody NewCardDTO newCardDTO, Authentication authentication){
 
         Client client = clientRepository.findByEmail(authentication.getName());
-
-     // Verificar si el cliente ya tiene 6 o más tarjetas
+     if (client == null) {
+         return new ResponseEntity<>("Client does not exist", HttpStatus.FORBIDDEN);
+     }
+     // Verifica si el cliente ya tiene 6 o más tarjetas
      if (client.getCards().size() >= 6) {
          return new ResponseEntity<>("Client cannot have more than 6 cards", HttpStatus.FORBIDDEN);
      }
+
      if (newCardDTO.cardType() == null || newCardDTO.cardColor() == null) {
          return new ResponseEntity<>("Card type or color cannot be null", HttpStatus.BAD_REQUEST);
      }
-     // Verificar si el cliente ya tiene una tarjeta del mismo tipo y color
+     // Verifica si el cliente ya tiene una tarjeta del mismo tipo y color
      boolean cardExists = client.getCards().stream()
              .anyMatch(card -> card.getCardType() == newCardDTO.cardType() && card.getColor() == newCardDTO.cardColor());
 
@@ -73,6 +76,9 @@ public class CardController {
     @GetMapping("/clients/current/cards")
     public ResponseEntity<?> getClientCards(Authentication authentication){
         Client client = clientRepository.findByEmail(authentication.getName());
+        if (client == null) {
+            return new ResponseEntity<>("Client does not exist", HttpStatus.FORBIDDEN);
+        }
         List<CardDto> cardDtoList = client.getCards().stream()
                 .map(CardDto::new)
                 .collect(Collectors.toList());
