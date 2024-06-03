@@ -5,9 +5,9 @@ import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
 import com.mindhub.homebanking.models.Transaction;
 import com.mindhub.homebanking.models.Type;
-import com.mindhub.homebanking.repositories.AccountRepository;
-import com.mindhub.homebanking.repositories.ClientRepository;
-import com.mindhub.homebanking.repositories.TransactionRepository;
+import com.mindhub.homebanking.services.AccountService;
+import com.mindhub.homebanking.services.ClientService;
+import com.mindhub.homebanking.services.TransactionService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.time.LocalDateTime;
 
 @RestController
@@ -25,19 +24,19 @@ import java.time.LocalDateTime;
 public class TransactionController {
 
     @Autowired
-    ClientRepository clientRepository;
+    private ClientService clientService;
 
     @Autowired
-    AccountRepository accountRepository;
+    private AccountService accountService;
 
     @Autowired
-    TransactionRepository transactionRepository;
+    private TransactionService transactionService;
 
     @Transactional
-    @PostMapping("/transactions")
+    @PostMapping("/current/transactions")
     public ResponseEntity<?> transaction(@RequestBody NewTransactionDTO newTransactionDTO, Authentication authentication){
 try {
-    Client client = clientRepository.findByEmail(authentication.getName());
+    Client client = clientService.getClientByEmail(authentication.getName());
 
     if (client == null) {
         return new ResponseEntity<>("Client does not exist", HttpStatus.FORBIDDEN);
@@ -63,12 +62,12 @@ try {
         return new ResponseEntity<>("You need to provide a different account destination ", HttpStatus.FORBIDDEN);
     }
 
-    Account fromAccount = accountRepository.findByNumber(newTransactionDTO.fromAccountNumber());
+    Account fromAccount = accountService.getAccountByNumber(newTransactionDTO.fromAccountNumber());
     if (fromAccount == null) {
         return new ResponseEntity<>("this account does not exist", HttpStatus.FORBIDDEN);
     }
 
-    Account toAccount = accountRepository.findByNumber(newTransactionDTO.toAccountNumber());
+    Account toAccount = accountService.getAccountByNumber(newTransactionDTO.toAccountNumber());
     if (toAccount == null) {
         return new ResponseEntity<>("this account does not exist", HttpStatus.FORBIDDEN);
     }
@@ -94,18 +93,17 @@ try {
     fromTransaction.setAccount(fromAccount);
     toTransaction.setAccount(toAccount);
 
-    transactionRepository.save(fromTransaction);
-    transactionRepository.save(toTransaction);
+    transactionService.saveTransaction(fromTransaction);
+    transactionService.saveTransaction(toTransaction);
 
-    return new ResponseEntity<>("Transaction completed successfully", HttpStatus.CREATED);
+    return ResponseEntity.status(HttpStatus.CREATED).body("Transaction completed successfully");
 
 } catch (Exception e){
     /* tiene como propósito imprimir el seguimiento de la pila de la excepción (stack trace) a
      la consola. Esto es útil para la depuración, ya que proporciona información detallada sobre
       la excepción, incluyendo el tipo de excepción y la secuencia de llamadas de método que
        condujeron a la excepción. */
-    e.printStackTrace();
-    return new ResponseEntity<>("An error occurred while processing the transaction", HttpStatus.INTERNAL_SERVER_ERROR);
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the transaction");
 }
     }
 

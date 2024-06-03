@@ -6,7 +6,8 @@ import com.mindhub.homebanking.dtos.ClientDto;
 import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
 import com.mindhub.homebanking.repositories.AccountRepository;
-import com.mindhub.homebanking.repositories.ClientRepository;
+import com.mindhub.homebanking.services.AccountService;
+import com.mindhub.homebanking.services.ClientService;
 import com.mindhub.homebanking.servicesSecurity.JwtUtilService;
 import com.mindhub.homebanking.utils.RandomNumber;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +30,7 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private ClientRepository clientRepository;
-
-    @Autowired
-    private AccountController accountController;
+    private ClientService clientService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -44,7 +42,7 @@ public class AuthController {
     private JwtUtilService jwtUtilService;
 
     @Autowired
-    private AccountRepository accountRepository;
+    private AccountService accountService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login (@RequestBody LoginDTO loginDTO){
@@ -83,7 +81,7 @@ public class AuthController {
         if(!passwordPattern.matcher(registerDTO.password()).matches()){
             return  new ResponseEntity<>("The password field must have 8 characters one uppercase one lowercase", HttpStatus.BAD_REQUEST);
         }
-        if(clientRepository.existsByEmail(registerDTO.email())){
+        if(clientService.existsClientByEmail(registerDTO.email())){
             return  new ResponseEntity<>("The email is already in use", HttpStatus.BAD_REQUEST);
         }
         /*if(clientRepository.findByEmail(registerDTO.email()) != null){
@@ -98,14 +96,14 @@ public class AuthController {
         String accountNumber;
         do {
             accountNumber = "VIN-"+ RandomNumber.eightDigits();
-        } while (accountRepository.findByNumber(accountNumber) != null);
+        } while (accountService.existsAccountByNumber(accountNumber));
 
         Account account = new Account(accountNumber,0);
 
         client.addAccount(account);
         account.setOwner(client);
-        clientRepository.save(client);
-        accountRepository.save(account);
+       clientService.saveClient(client);
+        accountService.saveAccount(account);
 
         return  new ResponseEntity<>("Client created", HttpStatus.CREATED);
     }
@@ -118,7 +116,7 @@ public class AuthController {
 
     @GetMapping("/current")
     public ResponseEntity<?> getClient(Authentication authentication){
-        Client client = clientRepository.findByEmail(authentication.getName());
+        Client client = clientService.getClientByEmail(authentication.getName());
         return ResponseEntity.ok(new ClientDto(client));
     }
 }

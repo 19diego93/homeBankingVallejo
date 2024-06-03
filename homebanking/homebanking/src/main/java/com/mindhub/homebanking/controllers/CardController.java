@@ -4,15 +4,14 @@ import com.mindhub.homebanking.dtos.CardDto;
 import com.mindhub.homebanking.dtos.ClientDto;
 import com.mindhub.homebanking.dtos.NewCardDTO;
 import com.mindhub.homebanking.models.*;
-import com.mindhub.homebanking.repositories.CardRepository;
-import com.mindhub.homebanking.repositories.ClientRepository;
+import com.mindhub.homebanking.services.CardService;
+import com.mindhub.homebanking.services.ClientService;
 import com.mindhub.homebanking.utils.RandomNumber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,17 +21,17 @@ import java.util.stream.Collectors;
 public class CardController {
 
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientService clientService;
 
     @Autowired
-    private CardRepository cardRepository;
+    private CardService cardService;
 
 
 
  @PostMapping("/clients/current/cards")
     public ResponseEntity<?> getClient(@RequestBody NewCardDTO newCardDTO, Authentication authentication){
 
-        Client client = clientRepository.findByEmail(authentication.getName());
+        Client client = clientService.getClientByEmail(authentication.getName());
      if (client == null) {
          return new ResponseEntity<>("Client does not exist", HttpStatus.FORBIDDEN);
      }
@@ -55,7 +54,7 @@ public class CardController {
      String cardNumber;
      do {
          cardNumber = RandomNumber.fourDigits() + "-" + RandomNumber.fourDigits() + "-" + RandomNumber.fourDigits() + "-" + RandomNumber.fourDigits();
-     } while (cardRepository.findByNumber(cardNumber) != null);
+     } while (cardService.getCardByNumber(cardNumber) != null);
 
      // Generar el CVV de la tarjeta
      Integer cvv = Integer.valueOf(RandomNumber.threeDigits());
@@ -65,9 +64,8 @@ public class CardController {
      client.addCard(card);
      card.setClient(client);
 
-     // Guardar el cliente y la tarjeta en el repositorio
-     clientRepository.save(client);
-     cardRepository.save(card);
+     // Guardar  la tarjeta en el repositorio
+         cardService.saveCard(card);
 
      // Devolver la respuesta con el DTO del cliente actualizado
         return new ResponseEntity<>(new ClientDto(client), HttpStatus.CREATED);
@@ -75,7 +73,7 @@ public class CardController {
 
     @GetMapping("/clients/current/cards")
     public ResponseEntity<?> getClientCards(Authentication authentication){
-        Client client = clientRepository.findByEmail(authentication.getName());
+        Client client = clientService.getClientByEmail(authentication.getName());
         if (client == null) {
             return new ResponseEntity<>("Client does not exist", HttpStatus.FORBIDDEN);
         }
