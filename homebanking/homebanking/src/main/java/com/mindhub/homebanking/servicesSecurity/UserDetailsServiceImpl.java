@@ -16,12 +16,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private ClientRepository clientRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Client client = clientRepository.findByEmail(username);
 
-        if(client == null){
+        if (client == null) {
             throw new UsernameNotFoundException(username);
         }
-        return User.withUsername(username).password(client.getPassword()).roles("CLIENT").build();
+        if (client.isAdmin()) {
+            return User.withUsername(username).password(client.getPassword()).roles("ADMIN").build();
+        } else {
+            return User.withUsername(username).password(client.getPassword()).roles("CLIENT").build();
+        }
     }
 }

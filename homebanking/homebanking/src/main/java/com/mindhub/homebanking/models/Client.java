@@ -21,6 +21,8 @@ public class Client {
 
     private String password;
 
+    private boolean isAdmin = false;
+
     @OneToMany(mappedBy = "accountOwner", fetch = FetchType.EAGER)
     private Set<Account> accounts = new HashSet<>();
 
@@ -37,6 +39,14 @@ public class Client {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+    }
+
+    public Client(String firstName, String lastName, String email, String password, boolean isAdmin) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.isAdmin = isAdmin;
     }
 
     public String getPassword() {return password;}
@@ -88,5 +98,9 @@ public class Client {
                 ", firstName='" + firstName + '\'' +
                 ", id=" + id +
                 '}';
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
     }
 }
