@@ -7,13 +7,13 @@ import com.mindhub.homebanking.services.LoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+
 @Service
 public class LoanServiceImpl implements LoanService {
 
     @Autowired
     LoanRepository loanRepository;
-    @Autowired
-    Loan loan;
+
     @Override
     public Loan getLoanById(Long id) {
         return loanRepository.findById(id).orElse(null);
