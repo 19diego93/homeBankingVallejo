@@ -10,7 +10,8 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private Type type;
+    @Enumerated(EnumType.STRING)
+    private TransactionType transactionType;
 
     private double amount;
 
@@ -23,8 +24,8 @@ public class Transaction {
 
     public Transaction() {}
 
-    public Transaction(Type type, double amount, String description, LocalDateTime date) {
-        this.type = type;
+    public Transaction(TransactionType transactionType, double amount, String description, LocalDateTime date) {
+        this.transactionType = transactionType;
         this.amount = amount;
         this.description = description;
         this.date = date;
@@ -32,9 +33,9 @@ public class Transaction {
 
     public long getId() {return id;}
 
-    public Type getType() {return type;}
+    public TransactionType getTransactionType() {return transactionType;}
 
-    public void setType(Type type) {this.type = type;}
+    public void setTransactionType(TransactionType transactionType) {this.transactionType = transactionType;}
 
     public double getAmount() {return amount;}
 
@@ -56,7 +57,7 @@ public class Transaction {
     public String toString() {
         return "Transaction{" +
                 "id=" + id +
-                ", type=" + type +
+                ", type=" + transactionType +
                 ", amount=" + amount +
                 ", description='" + description + '\'' +
                 ", date=" + date +

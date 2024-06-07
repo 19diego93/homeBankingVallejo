@@ -11,7 +11,7 @@ public class Loan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String name;
 
@@ -33,7 +33,7 @@ public class Loan {
 
     public Set<ClientLoan> getClientLoans() {return clients;}
 
-    public long getId() {return id;}
+    public Long getId() {return id;}
 
     public String getName() {return name;}
 

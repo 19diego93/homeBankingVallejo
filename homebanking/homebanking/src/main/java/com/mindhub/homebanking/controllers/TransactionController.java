@@ -4,7 +4,7 @@ import com.mindhub.homebanking.dtos.NewTransactionDTO;
 import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
 import com.mindhub.homebanking.models.Transaction;
-import com.mindhub.homebanking.models.Type;
+import com.mindhub.homebanking.models.TransactionType;
 import com.mindhub.homebanking.services.AccountService;
 import com.mindhub.homebanking.services.ClientService;
 import com.mindhub.homebanking.services.TransactionService;
@@ -33,7 +33,7 @@ public class TransactionController {
     private TransactionService transactionService;
 
     @Transactional
-    @PostMapping("/current/transactions")
+    @PostMapping("/transactions")
     public ResponseEntity<?> transaction(@RequestBody NewTransactionDTO newTransactionDTO, Authentication authentication){
 try {
     Client client = clientService.getClientByEmail(authentication.getName());
@@ -83,9 +83,9 @@ try {
     //Acredito el amount
     toAccount.setBalance(toAccount.getBalance() + newTransactionDTO.amount());
 
-    Transaction fromTransaction = new Transaction(Type.DEBIT, -newTransactionDTO.amount(), newTransactionDTO.description(), LocalDateTime.now());
+    Transaction fromTransaction = new Transaction(TransactionType.DEBIT, -newTransactionDTO.amount(), newTransactionDTO.description(), LocalDateTime.now());
 
-    Transaction toTransaction = new Transaction(Type.CREDIT, newTransactionDTO.amount(), newTransactionDTO.description(), LocalDateTime.now());
+    Transaction toTransaction = new Transaction(TransactionType.CREDIT, newTransactionDTO.amount(), newTransactionDTO.description(), LocalDateTime.now());
 
     fromAccount.addTransaction(fromTransaction);
     toAccount.addTransaction(toTransaction);

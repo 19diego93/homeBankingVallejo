@@ -25,12 +25,12 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
-    public List getListLoans() {
+    public List<Loan> getListLoans() {
         return loanRepository.findAll();
     }
 
     @Override
-    public List getListLoansDto(List <Loan> loans) {
+    public List<LoanDTO> getListLoansDto(List <Loan> loans) {
         return  loans.stream().map(loan -> new LoanDTO(loan)).toList();
     }
 

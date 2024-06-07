@@ -12,13 +12,14 @@ public class Card {
 
     private String cardHolder;
 
-    private Type cardType;
+    @Enumerated(EnumType.STRING)
+    private CardType cardType;
 
-    private CardColor color;
+    private CardColor cardColor;
 
     private String number;
 
-    private int cvv;
+    private Integer cvv;
 
     private LocalDate creationDate;
 
@@ -29,9 +30,9 @@ public class Card {
 
     public Card() {}
 
-    public Card(Type cardType, CardColor color, String number, int cvv) {
+    public Card(CardType cardType, CardColor color, String number, Integer cvv) {
         this.cardType = cardType;
-        this.color = color;
+        this.cardColor = color;
         this.number = number;
         this.cvv = cvv;
         this.creationDate = LocalDate.now();
@@ -44,13 +45,13 @@ public class Card {
 
     public void setClient(Client client) {this.client = client;}
 
-    public Type getCardType() {return cardType;}
+    public CardType getCardType() {return cardType;}
 
-    public CardColor getColor() {return color;}
+    public CardColor getColor() {return cardColor;}
 
     public String getNumber() {return number;}
 
-    public int getCvv() {return cvv;}
+    public Integer getCvv() {return cvv;}
 
     public LocalDate getCreationDate() {return creationDate;}
 

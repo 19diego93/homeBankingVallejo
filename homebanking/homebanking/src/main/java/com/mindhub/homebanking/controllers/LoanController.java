@@ -4,19 +4,17 @@ import com.mindhub.homebanking.dtos.LoanApplicationDTO;
 import com.mindhub.homebanking.dtos.LoanDTO;
 import com.mindhub.homebanking.models.*;
 import com.mindhub.homebanking.models.Loan;
-import com.mindhub.homebanking.repositories.*;
-import com.mindhub.homebanking.services.AccountService;
-import com.mindhub.homebanking.services.ClientService;
-import com.mindhub.homebanking.services.LoanService;
+import com.mindhub.homebanking.services.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/api")
@@ -29,9 +27,9 @@ public class LoanController {
     @Autowired
     private AccountService accountService;
     @Autowired
-    private TransactionRepository transactionRepository;
+    private TransactionService transactionService;
     @Autowired
-    private ClientLoanRepository clientLoanRepository;
+    private ClientLoanService clientLoanService;
 
     @GetMapping("/loans")
     public ResponseEntity<?> getLoans(Authentication authentication) {
@@ -40,7 +38,7 @@ public class LoanController {
         if (!loansListDTO.isEmpty()) {
             return new ResponseEntity<>(loansListDTO, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("There are no loans avialables", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("There are no loans available", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -50,8 +48,20 @@ public class LoanController {
         try {
             Client client = clientService.getClientByEmail(authentication.getName());
 
-            if (loanApplicationDTO.amount() == null || loanApplicationDTO.payments() == null || loanApplicationDTO.idLoan() == null || loanApplicationDTO.accountNumber() == null) {
-                return new ResponseEntity<>("Missing data", HttpStatus.FORBIDDEN);
+            if (loanApplicationDTO.amount() == null) {
+                return new ResponseEntity<>("Amount can not be empty", HttpStatus.FORBIDDEN);
+            }
+
+            if (loanApplicationDTO.payments() == null) {
+                return new ResponseEntity<>("Instalments can not be empty", HttpStatus.FORBIDDEN);
+            }
+
+            if (loanApplicationDTO.accountNumber() == null) {
+                return new ResponseEntity<>("Account can not be empty", HttpStatus.FORBIDDEN);
+            }
+
+            if (loanApplicationDTO.idLoan() == null) {
+                return new ResponseEntity<>("Loan can not be empty", HttpStatus.FORBIDDEN);
             }
 
             if (loanApplicationDTO.idLoan().toString().isBlank()) {
@@ -100,26 +110,41 @@ public class LoanController {
             if (loanApplicationDTO.amount() > loan.getMaxAmount()) {
                 return new ResponseEntity<>("The amount exceeds the maximum allowed for this loan type", HttpStatus.FORBIDDEN);
             }
+            // quiero 1 sola repeticion de loans
+            if (client.getClientLoans().stream().anyMatch(clientLoan -> clientLoan.getLoan().getId().equals(loanApplicationDTO.idLoan()))) {
+                return new ResponseEntity<>("The client already has a loan of this type", HttpStatus.FORBIDDEN);
+            }
 
             Account account = accountService.getAccountByNumber(loanApplicationDTO.accountNumber());
 
             account.setBalance(account.getBalance() + loanApplicationDTO.amount());
 
-            Transaction transaction = new Transaction(Type.CREDIT, loanApplicationDTO.amount(), "Loan application", LocalDateTime.now());
+            Transaction transaction = new Transaction(TransactionType.CREDIT, loanApplicationDTO.amount(), "Loan application", LocalDateTime.now());
 
             account.addTransaction(transaction);
 
             transaction.setAccount(account);
 
-            ClientLoan clientLoan = new ClientLoan((loanApplicationDTO.amount() + (loanApplicationDTO.amount() * 0.2)), loanApplicationDTO.payments());
+            int instalments = loanApplicationDTO.payments();
+
+            double interestRate;
+            if (instalments == 12) {
+                interestRate = 1.20;
+            } else if (instalments < 12) {
+                interestRate = 1.15;
+            } else {
+                interestRate = 1.25;
+            }
+
+            ClientLoan clientLoan = new ClientLoan((loanApplicationDTO.amount() * interestRate), loanApplicationDTO.payments());
 
             clientLoan.setClient(client);
             clientLoan.setLoan(loan);
             client.addLoan(clientLoan);
             loan.addClient(clientLoan);
 
-            transactionRepository.save(transaction);
-            clientLoanRepository.save(clientLoan);
+            transactionService.saveTransaction(transaction);
+            clientLoanService.saveClientLoan(clientLoan);
 
             return new ResponseEntity<>("Loan approved", HttpStatus.CREATED);
         } catch (Exception e) {

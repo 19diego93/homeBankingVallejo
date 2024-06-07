@@ -33,12 +33,12 @@ public class HomebankingApplication {
 			Account account2 = new Account("VNI002",7500);
 			Account account3 = new Account("VNI003",9);
 
-			Transaction transaction1 = new Transaction(Type.CREDIT,800,"Annual payment", LocalDateTime.now());
-			Transaction transaction2 = new Transaction(Type.DEBIT,-300,"Daily payment", LocalDateTime.now());
-			Transaction transaction3 = new Transaction(Type.CREDIT,1000,"Annual payment", LocalDateTime.now());
-			Transaction transaction4 = new Transaction(Type.DEBIT,-3000,"Weekly payment", LocalDateTime.now());
-			Transaction transaction5 = new Transaction(Type.CREDIT,500,"Monthly payment", LocalDateTime.now());
-			Transaction transaction6 = new Transaction(Type.DEBIT,-600,"Tax payment", LocalDateTime.now());
+			Transaction transaction1 = new Transaction(TransactionType.CREDIT,800,"Annual payment", LocalDateTime.now());
+			Transaction transaction2 = new Transaction(TransactionType.DEBIT,-300,"Daily payment", LocalDateTime.now());
+			Transaction transaction3 = new Transaction(TransactionType.CREDIT,1000,"Annual payment", LocalDateTime.now());
+			Transaction transaction4 = new Transaction(TransactionType.DEBIT,-3000,"Weekly payment", LocalDateTime.now());
+			Transaction transaction5 = new Transaction(TransactionType.CREDIT,500,"Monthly payment", LocalDateTime.now());
+			Transaction transaction6 = new Transaction(TransactionType.DEBIT,-600,"Tax payment", LocalDateTime.now());
 
 			Loan loan1 = new Loan("Mortgage",500000, Set.of(12,24,36,48,60));
 			Loan loan2 = new Loan("Personal",100000,Set.of(6,12,24));
@@ -49,9 +49,9 @@ public class HomebankingApplication {
 			ClientLoan clientLoan3 =new ClientLoan(100000,24);
 			ClientLoan clientLoan4 =new ClientLoan(200000,36);
 
-			Card card1 = new Card(Type.DEBIT,CardColor.GOLD,"3325-6745-7876-4445",345);
-			Card card2 = new Card(Type.CREDIT,CardColor.TITANIUM,"2345-6745-8876-4567",123);
-			Card card3 = new Card(Type.CREDIT,CardColor.SILVER,"1111-2345-4566-9898",999);
+			Card card1 = new Card(CardType.DEBIT,CardColor.GOLD,"3325-6745-7876-4445",345);
+			Card card2 = new Card(CardType.CREDIT,CardColor.TITANIUM,"2345-6745-8876-4567",123);
+			Card card3 = new Card(CardType.CREDIT,CardColor.SILVER,"1111-2345-4566-9898",999);
 
 			account1.setOwner(client1);
 			account2.setOwner(client1);
@@ -117,7 +117,7 @@ public class HomebankingApplication {
 			loanRepository.save(loan1);
 			loanRepository.save(loan2);
 			loanRepository.save(loan3);
-			
+
 			clientLoanRepository.save(clientLoan1);
 			clientLoanRepository.save(clientLoan2);
 			clientLoanRepository.save(clientLoan3);
