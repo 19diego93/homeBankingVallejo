@@ -51,7 +51,7 @@ public class CardController {
      //verifica que coincida lo que llega del dto con los distintos enums
      CardType toCardType;
      try {
-         toCardType = CardType.valueOf(newCardDTO.cardType());
+         toCardType = CardType.valueOf(newCardDTO.cardType().toUpperCase());
      } catch (IllegalArgumentException | NullPointerException e) {
          return new ResponseEntity<>("Check the card type", HttpStatus.FORBIDDEN);
      }

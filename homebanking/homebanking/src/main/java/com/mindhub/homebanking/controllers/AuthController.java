@@ -55,7 +55,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/register")
+    @PostMapping("/signup")
     public ResponseEntity <?> register (@RequestBody RegisterDTO registerDTO){
         System.out.println("RegisterDTO: " + registerDTO);
         String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
@@ -116,6 +116,9 @@ public class AuthController {
     @GetMapping("/current")
     public ResponseEntity<?> getClient(Authentication authentication){
         Client client = clientService.getClientByEmail(authentication.getName());
+        if(client == null){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Client not logged");
+        }
         return ResponseEntity.ok(new ClientDto(client));
     }
 }

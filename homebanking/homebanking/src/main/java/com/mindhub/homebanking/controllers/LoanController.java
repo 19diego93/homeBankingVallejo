@@ -119,7 +119,7 @@ public class LoanController {
 
             account.setBalance(account.getBalance() + loanApplicationDTO.amount());
 
-            Transaction transaction = new Transaction(TransactionType.CREDIT, loanApplicationDTO.amount(), "Loan application", LocalDateTime.now());
+            Transaction transaction = new Transaction(TransactionType.CREDIT, loanApplicationDTO.amount(), "Loan application "+loan.getName()+" aproved", LocalDateTime.now());
 
             account.addTransaction(transaction);
 
