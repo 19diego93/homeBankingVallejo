@@ -6,7 +6,7 @@ import com.mindhub.homebanking.dtos.NewCardDTO;
 import com.mindhub.homebanking.models.*;
 import com.mindhub.homebanking.services.CardService;
 import com.mindhub.homebanking.services.ClientService;
-import com.mindhub.homebanking.utils.RandomNumber;
+import com.mindhub.homebanking.utils.CardUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,11 +75,11 @@ public class CardController {
      // Generar un número de tarjeta único
      String cardNumber;
      do {
-         cardNumber = RandomNumber.fourDigits() + "-" + RandomNumber.fourDigits() + "-" + RandomNumber.fourDigits() + "-" + RandomNumber.fourDigits();
+         cardNumber = CardUtils.createCardNumber();
      } while (cardService.getCardByNumber(cardNumber) != null);
 
      // Generar el CVV de la tarjeta
-     Integer cvv = Integer.valueOf(RandomNumber.threeDigits());
+     Integer cvv = Integer.valueOf(CardUtils.createCvv());
 
      // Crear la nueva tarjeta y asociarla al cliente
      Card card = new Card(toCardType, toCardColor, cardNumber, cvv);

@@ -8,7 +8,7 @@ public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
@@ -31,7 +31,7 @@ public class Transaction {
         this.date = date;
     }
 
-    public long getId() {return id;}
+    public Long getId() {return id;}
 
     public TransactionType getTransactionType() {return transactionType;}
 

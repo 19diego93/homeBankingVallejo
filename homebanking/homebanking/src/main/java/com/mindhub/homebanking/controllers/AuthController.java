@@ -8,7 +8,7 @@ import com.mindhub.homebanking.models.Client;
 import com.mindhub.homebanking.services.AccountService;
 import com.mindhub.homebanking.services.ClientService;
 import com.mindhub.homebanking.servicesSecurity.JwtUtilService;
-import com.mindhub.homebanking.utils.RandomNumber;
+import com.mindhub.homebanking.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -94,7 +94,7 @@ public class AuthController {
         System.out.println("Creating new client: " + client);
         String accountNumber;
         do {
-            accountNumber = "VIN-"+ RandomNumber.eightDigits();
+            accountNumber = AccountUtils.createAccountNumber();
         } while (accountService.existsAccountByNumber(accountNumber));
 
         Account account = new Account(accountNumber,0);
