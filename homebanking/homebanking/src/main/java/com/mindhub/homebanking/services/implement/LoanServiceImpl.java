@@ -12,7 +12,7 @@ import java.util.List;
 public class LoanServiceImpl implements LoanService {
 
     @Autowired
-    LoanRepository loanRepository;
+    private LoanRepository loanRepository;
 
     @Override
     public Loan getLoanById(Long id) {

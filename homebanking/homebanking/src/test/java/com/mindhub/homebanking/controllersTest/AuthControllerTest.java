@@ -25,62 +25,70 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+// Test class for AuthController
 public class AuthControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
+    private MockMvc mockMvc; // MockMvc for testing
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private ObjectMapper objectMapper; // ObjectMapper for JSON conversion
 
     @MockBean
-    private PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder; // Mocked PasswordEncoder
 
     @MockBean
-    private ClientService clientService;
+    private ClientService clientService; // Mocked ClientService
 
     @MockBean
-    private AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager; // Mocked AuthenticationManager
 
     @MockBean
-    private UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService; // Mocked UserDetailsService
 
     @MockBean
-    private JwtUtilService jwtUtilService;
+    private JwtUtilService jwtUtilService; // Mocked JwtUtilService
 
     @MockBean
-    private AccountService accountService;
+    private AccountService accountService; // Mocked AccountService
 
-    private RegisterDTO registerDTO;
-    private LoginDTO loginDTO;
+    private RegisterDTO registerDTO; // DTO for registration
+    private LoginDTO loginDTO; // DTO for login
 
     @BeforeEach
     void setUp() {
+        // Initialize registerDTO and loginDTO
         registerDTO = new RegisterDTO("John", "Doe", "john.doe@example.com", "Password@123");
         loginDTO = new LoginDTO("john.doe@example.com", "Password@123");
     }
 
     @Test
+        // Test for user registration
     void testRegister() throws Exception {
+        // Mock behavior for registration
         Mockito.when(clientService.existsClientByEmail(registerDTO.email())).thenReturn(false);
         Mockito.when(passwordEncoder.encode(registerDTO.password())).thenReturn("encodedPassword");
 
+        // Perform registration API call
         mockMvc.perform(post("/api/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registerDTO)))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated()); // Expect successful creation
     }
 
     @Test
+        // Test for user login
     void testLogin() throws Exception {
+        // Mock behavior for login
         Mockito.when(authenticationManager.authenticate(Mockito.any())).thenReturn(null);
         Mockito.when(userDetailsService.loadUserByUsername(loginDTO.email())).thenReturn(Mockito.mock(UserDetails.class));
         Mockito.when(jwtUtilService.generateToken(Mockito.any())).thenReturn("mockJwtToken");
 
+        // Perform login API call
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginDTO)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()); // Expect successful login
     }
 }
 

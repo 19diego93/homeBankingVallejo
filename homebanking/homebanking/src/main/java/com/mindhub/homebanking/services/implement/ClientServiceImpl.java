@@ -12,9 +12,7 @@ import java.util.List;
 @Service
 public class ClientServiceImpl implements ClientService {
     @Autowired
-    ClientRepository clientRepository;
-
-    private Object Collectors;
+    private ClientRepository clientRepository;
 
     @Override
     public List<Client> getListClients() {
