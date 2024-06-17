@@ -6,6 +6,8 @@ import java.util.Set;
 
 public class LoanDTO {
 
+    private Long id;
+
     private String name;
 
     private double maxAmount;
@@ -13,9 +15,14 @@ public class LoanDTO {
     private Set<Integer> payments;
 
     public LoanDTO(Loan loan) {
+        this.id = loan.getId();
         this.name = loan.getName();
         this.maxAmount = loan.getMaxAmount();
         this.payments = loan.getPayments();
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {

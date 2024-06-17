@@ -78,7 +78,7 @@ public class AuthController {
             return  new ResponseEntity<>("The password field must not be empty", HttpStatus.FORBIDDEN);
         }
         if(!passwordPattern.matcher(registerDTO.password()).matches()){
-            return  new ResponseEntity<>("The password field must have 8 characters one uppercase one lowercase", HttpStatus.BAD_REQUEST);
+            return  new ResponseEntity<>("The password field must have 8 characters one uppercase one lowercase and a special character (@, $, !, %, *, ?, &).", HttpStatus.BAD_REQUEST);
         }
         if(clientService.existsClientByEmail(registerDTO.email())){
             return  new ResponseEntity<>("The email is already in use", HttpStatus.BAD_REQUEST);

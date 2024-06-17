@@ -126,7 +126,7 @@ public class RepositoriesTest {
     }
 
     @Test
-    @Transactional
+    @Transactional()
     public void saveTransaction(){
         Transaction transaction = new Transaction(TransactionType.CREDIT, 100.0, "test", LocalDateTime.now());
         transactionRepository.save(transaction);
