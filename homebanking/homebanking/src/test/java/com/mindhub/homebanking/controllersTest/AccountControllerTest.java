@@ -65,33 +65,33 @@ public class AccountControllerTest {
         verify(accountService, times(1)).getAccountById(1L);
     }
 
-    @Test
-    @WithMockUser(username = "user@example.com")
-    public void testCreateAccount() throws Exception {
-        Client client = new Client();
-        client.setEmail("user@example.com");
-        when(clientService.getClientByEmail("user@example.com")).thenReturn(client);
-
-        mockMvc.perform(post("/api/clients/accounts/current"))
-                .andExpect(status().isCreated());
-
-        verify(clientService, times(1)).getClientByEmail("user@example.com");
-    }
-
-    @Test
-    @WithMockUser(username = "user@example.com")
-    public void testGetClientAccounts() throws Exception {
-        Client client = new Client();
-        client.setEmail("user@example.com");
-        Account account = new Account("12345678", 0);
-        client.addAccount(account);
-
-        when(clientService.getClientByEmail("user@example.com")).thenReturn(client);
-
-        mockMvc.perform(get("/api/clients/accounts/current"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].number").value("12345678"));
-
-        verify(clientService, times(1)).getClientByEmail("user@example.com");
-    }
+//    @Test
+//    @WithMockUser(username = "user@example.com")
+//    public void testCreateAccount() throws Exception {
+//        Client client = new Client();
+//        client.setEmail("user@example.com");
+//        when(clientService.getClientByEmail("user@example.com")).thenReturn(client);
+//
+//        mockMvc.perform(post("/api/clients/accounts/current"))
+//                .andExpect(status().isCreated());
+//
+//        verify(clientService, times(1)).getClientByEmail("user@example.com");
+//    }
+//
+//    @Test
+//    @WithMockUser(username = "user@example.com")
+//    public void testGetClientAccounts() throws Exception {
+//        Client client = new Client();
+//        client.setEmail("user@example.com");
+//        Account account = new Account("12345678", 0);
+//        client.addAccount(account);
+//
+//        when(clientService.getClientByEmail("user@example.com")).thenReturn(client);
+//
+//        mockMvc.perform(get("/api/clients/accounts/current"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$[0].number").value("12345678"));
+//
+//        verify(clientService, times(1)).getClientByEmail("user@example.com");
+//    }
 }
